@@ -1,0 +1,20 @@
+b2
+<link href="https://rawgithub.com/lhoeppner" rel="stylesheet">
+netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css
+
+b3
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+
+
+Usage
+
+    <div ng-controller="DropdownCtrl">
+        <input type='text' combobox combobox-width="300" combobox-items="items" select="select({text: selectedText})" />
+        <div>
+            Selected: {{ selected }}
+        </div>
+        <div>
+            Selected index: {{ selectedIndex }}
+            <br />Selected item: {{ selectedItem }}
+        </div>
+    </div>
