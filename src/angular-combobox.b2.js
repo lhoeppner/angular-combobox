@@ -2,7 +2,6 @@
  * TODO:
  * - allow multiple select
  * - keyboard navigation of items (up/down/return)
- * - on click outside, clear filter term
  * - height option (make scrollable inside)
  * - on focus input, clear filter text (only display selected in non-focused)
  * - multiple breaks...also breaks if we require ^ngModel ?
@@ -32,7 +31,8 @@ combobox.factory('safeApply', [function ($rootScope) {
 combobox.directive('combobox', function ($document, $location, $log, $filter, safeApply) {
         var openElement = null,
             closeMenu = angular.noop,
-            COMBOBOX_ID = "_combobox_id";
+            COMBOBOX_ID = "_combobox_id",
+            TAB_KEY_CODE = 9;
 
         var inputEl = angular.element('<input type="text" ng-model="state.searchTerm" ng-keydown="onKeyDown" clear-on-focus ' +
             'style="margin-bottom: 0px; width:{{style.inputWidth}}px"/>');
@@ -48,21 +48,7 @@ combobox.directive('combobox', function ($document, $location, $log, $filter, sa
             '</li>' +
             '</ul>');
 
-//        var safeApply = function(fn) {
-//            var phase = this.$root.$$phase;
-//            if(phase == '$apply' || phase == '$digest') {
-//                if(fn && (typeof(fn) === 'function')) {
-//                    fn();
-//                }
-//            } else {
-//                this.$apply(fn);
-//            }
-//        };
-
         var link = function (scope, element, attrs) {
-            console.log(scope)
-            console.log(attrs);
-
             var width = attrs["comboboxWidth"] || 200;
             scope.style = {
                 width: width,
@@ -96,9 +82,6 @@ combobox.directive('combobox', function ($document, $location, $log, $filter, sa
             }
             scope.clearFilter(); // initialize filtered items
 
-            console.log("passed state");
-            console.log(scope.state);
-
             scope.getSelectedIndex = function () {
                 return scope.state.selectedIndex;
             };
@@ -119,7 +102,6 @@ combobox.directive('combobox', function ($document, $location, $log, $filter, sa
                     scope.state._selectedItem = toSelect; // store internal type with generated id
                     scope.state.selectedItem = toSelect.text;
                     scope.state.selectedIndex = toSelect[COMBOBOX_ID];
-                    //scope.select({text: toSelect.text}); // TODO fix this
                 });
 
                 // TODO pass preventClose in multiselect case
@@ -131,7 +113,6 @@ combobox.directive('combobox', function ($document, $location, $log, $filter, sa
             };
 
             scope.isSelected = function (item) {
-
                 return item[COMBOBOX_ID] === scope.getSelectedIndex();
             };
 
@@ -142,10 +123,7 @@ combobox.directive('combobox', function ($document, $location, $log, $filter, sa
             // TODO allow custom keydown event handler
             scope.onKeyDown = function ($event) {
                 console.log(scope);
-                if ($event.which == 9) {
-                    //$event.preventDefault();
-                    // TODO autocomplete and set selected value
-
+                if ($event.which == TAB_KEY_CODE) {
                     var items = scope.pristineItems;
                     var value = scope.getSearchTerm();
 
@@ -197,10 +175,6 @@ combobox.directive('combobox', function ($document, $location, $log, $filter, sa
             };
 
             inputEl.bind('click', function (event) {
-                $log.log("click");
-                $log.log(event);
-
-
                 event.preventDefault();
                 event.stopPropagation();
 
