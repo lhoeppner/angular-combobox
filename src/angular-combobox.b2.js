@@ -1,5 +1,9 @@
 /**
+ * http://ivaynberg.github.io/select2/
+ * https://github.com/angular-ui/ui-select2
+ *
  * TODO:
+ * - write jasmine spec
  * - allow multiple select
  * - keyboard navigation of items (up/down/return)
  * - height option (make scrollable inside)
